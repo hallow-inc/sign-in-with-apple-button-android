@@ -20,16 +20,22 @@ class SampleActivity : AppCompatActivity() {
         val signInWithAppleButtonWhiteOutline: SignInWithAppleButton = findViewById(R.id.sign_in_with_apple_button_white_outline)
 
         // Replace clientId and redirectUri with your own values.
-        val configuration = SignInWithAppleConfiguration(
-            clientId = "com.your.client.id.here",
-            redirectUri = "https://your-redirect-uri.com/callback",
-            scope = "email name"
-        )
+        val configuration =  SignInWithAppleConfiguration.Builder()
+            .clientId("app.hallow.api")
+            .redirectUri("https://hallow.com/portal")
+            .responseType(SignInWithAppleConfiguration.ResponseType.ALL)
+            .scope(SignInWithAppleConfiguration.Scope.ALL)
+            .build()
 
         val callback: (SignInWithAppleResult) -> Unit = { result ->
             when (result) {
                 is SignInWithAppleResult.Success -> {
-                    Toast.makeText(this, result.authorizationCode, LENGTH_SHORT).show()
+                    Toast.makeText(
+                        this,
+                        "authorizationCode : ${result.authorizationCode}\n\nuser : ${result.user?.firstName}\n\nidToken : ${result.idToken}",
+                        LENGTH_SHORT
+                    ).show()
+
                 }
                 is SignInWithAppleResult.Failure -> {
                     Log.d("SAMPLE_APP", "Received error from Apple Sign In ${result.error.message}")
