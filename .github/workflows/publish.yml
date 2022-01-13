@@ -6,6 +6,7 @@ on:
 jobs:
   publish:
     runs-on: ubuntu-latest 
+    if: github.repository_owner == 'hallow-inc'
     permissions: 
       contents: read
       packages: write 
