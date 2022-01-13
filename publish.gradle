@@ -1,12 +1,9 @@
-apply plugin: 'com.jfrog.bintray'
 apply plugin: 'maven-publish'
 
 group = 'com.github.hallow-inc'
 version = '0.5'
 
-def siteUrl = 'https://github.com/hallow-inc/sign-in-with-apple-button-android'
-def gitUrl = 'https://github.com/hallow-inc/sign-in-with-apple-button-android.git'
-
+def repo = 'hallow-inc/sign-in-with-apple-button-android'
 
 task sourcesJar(type: Jar) {
     archiveClassifier = 'sources'
@@ -47,32 +44,15 @@ publishing {
             }
         }
     }
-}
-bintray {
-    // Get Bintray credential from environment variable
-    user = System.getenv('BINTRAY_USER') // Get bintray User
-    key = System.getenv('BINTRAY_KEY') // Get bintray Secret Key
-    configurations = ['archives']
-    pkg {
-        repo = 'maven'
-        name = 'signIn-with-apple'
-        desc = 'Add a Sign In button for Sign In With Apple'
 
-        websiteUrl = siteUrl
-        vcsUrl = gitUrl
-
-        labels = ['android', 'signin', 'apple']
-        publicDownloadNumbers = true
-
-        licenses = ['MIT']
-        publish = true
-
-        version {
-            name = this.version //Bintray logical version name
-            desc = 'Enhance configuration & fetch id_token in addition to code'
-            vcsTag = this.version
+    repositories {
+        maven {
+            name = "GitHubPackages"
+            url = "https://maven.pkg.github.com/$repo"
+            credentials {
+                username = System.getenv("GITHUB_ACTOR")
+                password = System.getenv("GITHUB_TOKEN")
+            }
         }
     }
-    publications = ['Production']
-
 }
