@@ -78,6 +78,7 @@ class SignInWithAppleService(
                         appendQueryParameter("scope", configuration.scope)
                         appendQueryParameter("response_mode", "form_post")
                         appendQueryParameter("state", state)
+                        appendQueryParameter("response_mode", "form_post")
                     }
                     .build()
                     .toString()
