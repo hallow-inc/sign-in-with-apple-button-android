@@ -1,11 +1,11 @@
 package com.willowtreeapps.signinwithapplebutton
 
-import android.net.Uri
 import android.os.Parcel
 import android.os.Parcelable
+import androidx.core.net.toUri
 import androidx.fragment.app.FragmentManager
 import com.willowtreeapps.signinwithapplebutton.view.SignInWebViewDialogFragment
-import java.util.*
+import java.util.UUID
 
 class SignInWithAppleService(
     private val fragmentManager: FragmentManager,
@@ -69,8 +69,7 @@ class SignInWithAppleService(
                 configuration: SignInWithAppleConfiguration,
                 state: String = UUID.randomUUID().toString()
             ): AuthenticationAttempt {
-                val authenticationUri = Uri
-                    .parse("https://appleid.apple.com/auth/authorize")
+                val authenticationUri = "https://appleid.apple.com/auth/authorize".toUri()
                     .buildUpon().apply {
                         appendQueryParameter("client_id", configuration.clientId)
                         appendQueryParameter("redirect_uri", configuration.redirectUri)
@@ -78,7 +77,6 @@ class SignInWithAppleService(
                         appendQueryParameter("scope", configuration.scope)
                         appendQueryParameter("response_mode", "form_post")
                         appendQueryParameter("state", state)
-                        appendQueryParameter("response_mode", "form_post")
                     }
                     .build()
                     .toString()
@@ -89,7 +87,8 @@ class SignInWithAppleService(
     }
 
     fun show() {
-        val fragment = SignInWebViewDialogFragment.newInstance(AuthenticationAttempt.create(configuration))
+        val fragment =
+            SignInWebViewDialogFragment.newInstance(AuthenticationAttempt.create(configuration))
         fragment.configure(callback)
         fragment.show(fragmentManager, fragmentTag)
     }
