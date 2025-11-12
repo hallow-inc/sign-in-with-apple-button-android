@@ -5,26 +5,15 @@ version = '0.7'
 
 def repo = 'hallow-inc/sign-in-with-apple-button-android'
 
-task sourcesJar(type: Jar) {
-    archiveClassifier = 'sources'
-    from(android.sourceSets.main.java.srcDirs)
-}
-
-task androidJavadocs(type: Javadoc) {
-    source = android.sourceSets.main.java.srcDirs
-    failOnError = false
-}
-
-task javadocsJar(type: Jar) {
-    archiveClassifier = 'javadoc'
-    from(androidJavadocs)
+tasks.register("androidSourcesJar", Jar) {
+    archiveClassifier.set('sources')
+    from android.sourceSets.main.java.srcDirs
 }
 
 publishing {
     publications {
         Production(MavenPublication) {
-            artifact sourcesJar
-            artifact javadocsJar
+            artifact androidSourcesJar
             artifact("$buildDir/outputs/aar/signIn-with-apple-release.aar")
             groupId this.group
             artifactId 'signin-with-apple'
