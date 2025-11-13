@@ -1,35 +1,27 @@
 apply plugin: 'maven-publish'
 
 group = 'com.github.hallow-inc'
-version = '0.8'
+version = '0.9'
 
 def repo = 'hallow-inc/sign-in-with-apple-button-android'
 
-tasks.register("androidSourcesJar", Jar) {
-    archiveClassifier.set('sources')
-    from android.sourceSets.main.java.srcDirs
+android {
+    publishing {
+        singleVariant("release") {
+            withSourcesJar()
+        }
+    }
 }
 
 publishing {
     publications {
-        Production(MavenPublication) {
-            artifact androidSourcesJar
-            artifact("$buildDir/outputs/aar/signIn-with-apple-release.aar")
+        release(MavenPublication) {
             groupId this.group
             artifactId 'signin-with-apple'
             version this.version
 
-            //The publication doesn't know about our dependencies, so we have to manually add them to the pom
-            pom.withXml {
-                def dependenciesNode = asNode().appendNode('dependencies')
-
-                //Iterate over the compile dependencies (we don't want the test ones), adding a <dependency> node for each
-                configurations.implementation.allDependencies.each {
-                    def dependencyNode = dependenciesNode.appendNode('dependency')
-                    dependencyNode.appendNode('groupId', it.group)
-                    dependencyNode.appendNode('artifactId', it.name)
-                    dependencyNode.appendNode('version', it.version)
-                }
+            afterEvaluate {
+                from components.release
             }
         }
     }
